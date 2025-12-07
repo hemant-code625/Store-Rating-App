@@ -44,7 +44,7 @@ const signupController = async (req, res) => {
       id: newUser.insertId,
       name,
       email: email.toLowerCase(),
-      role: "user",
+      role: "USER", // default role
     });
 
     const options = {
@@ -73,6 +73,7 @@ const signinController = async (req, res) => {
   // check if user exists
   // validate password
   // generate token
+  // remove password from user object
   // send cookies within the response
   const { email, password } = req.body;
 
@@ -100,6 +101,7 @@ const signinController = async (req, res) => {
     if (!isValid) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
+    delete existingUser.password;
     const { accessToken, refreshToken } = generateTokens(existingUser);
 
     const options = {
@@ -112,6 +114,7 @@ const signinController = async (req, res) => {
       .cookie("refreshToken", refreshToken, options)
       .cookie("accessToken", accessToken, options)
       .json({
+        user: existingUser,
         message: "User signed in successfully.",
       });
   } catch (error) {

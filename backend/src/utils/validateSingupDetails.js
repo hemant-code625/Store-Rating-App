@@ -8,7 +8,9 @@ const validateSignupDetails = (name, address, email, password) => {
   if (name && name.length > 60) {
     errors.push("Name must not exceed 60 characters.");
   }
-
+  if (!address) {
+    errors.push("Address is required.");
+  }
   // Max 400 characters
   if (address && address.length > 400) {
     errors.push("Address must not exceed 400 characters.");

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 // importing routes
 import authRouter from "./routes/auth.routes.js";
