@@ -12,6 +12,7 @@
   "author": "Hemant Singh Parmar",
   "license": "ISC",
   "dependencies": {
+    "@prisma/adapter-mariadb": "^7.1.0",
     "@prisma/client": "^7.1.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -23,7 +24,7 @@
     "prettier": "^3.7.4"
   },
   "devDependencies": {
-    "prisma": "^7.1.0",
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "prisma": "^7.1.0"
   }
 }
