@@ -9,7 +9,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGIN || "*",
+    origin: [...JSON.parse(process.env.ALLOWED_ORIGIN)],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
   })
 );
 
