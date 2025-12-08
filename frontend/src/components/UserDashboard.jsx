@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import HandleRating from "./ui/HandleRating";
 
 const UserDashboard = ({ user }) => {
   const [stores, setStores] = useState([]);
@@ -101,13 +102,8 @@ const UserDashboard = ({ user }) => {
                       <td className="py-2 px-3">
                         {store.averageRating || "N/A"}
                       </td>
-                      <td className="py-2 px-3">
-                        <a
-                          href={`/rate/${store.id}`}
-                          className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm"
-                        >
-                          Rate Store
-                        </a>
+                      <td className="py-2 px-3 ">
+                        <HandleRating storeId={store.id} />
                       </td>
                     </tr>
                   ))
