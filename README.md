@@ -52,3 +52,40 @@ A web application that lets users submit ratings for stores registered on the pl
 - Email: standard email validation.
 
 All tables support ascending/descending sorting on key fields like Name and Email.
+
+## Setting up the project locally.
+
+### Prerequisites
+
+- Node.js 18+ installed
+- MySQL running in XAMPP (start Apache + MySQL, ensure the database configured in the backend `.env.example` is available for your referenece)
+
+### Using npm
+
+```bash
+# Backend
+cd backend
+npm install
+npm run dev
+
+# Frontend (new terminal)
+cd frontend
+npm install
+npm run dev
+```
+
+### Using pnpm
+
+```bash
+# Backend
+cd backend
+pnpm install
+pnpm run dev
+
+# Frontend (new terminal)
+cd frontend
+pnpm install
+pnpm run dev
+```
+
+NOTE: The frontend runs on Vite's dev server (default http://localhost:5173) and the backend on its configured port (check `backend/.env.example`). Make sure MySQL in XAMPP remains running while both servers are active.
