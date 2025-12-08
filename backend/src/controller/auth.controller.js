@@ -59,6 +59,74 @@ const signupController = async (req, res) => {
   }
 };
 
+const userSignupController = async (req, res) => {
+  // get user details from request body
+  // validate user details
+  // check if user with email already exists
+  // hash password
+  // create new user in the database
+  // generate tokens
+  // send response
+  const { name, address, email, password } = req.body;
+
+  const validDetails = validateSignupDetails(name, address, email, password);
+
+  if (validDetails.length > 0) {
+    return res.status(400).json({
+      message: "Validation failed.",
+      errors: validDetails,
+    });
+  }
+
+  try {
+    const existingUser = await dbQuery("SELECT * FROM user WHERE email = ?", [
+      email.toLowerCase(),
+    ]).then((results) => results[0]);
+
+    if (existingUser) {
+      return res
+        .status(409)
+        .json(new ApiError(409, "User with this email already exists."));
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await dbQuery(
+      "INSERT INTO user (name, address, email, password) VALUES (?, ?, ?, ?)",
+      [name, address, email.toLowerCase(), hashedPassword]
+    );
+    const user = {
+      id: newUser.insertId,
+      name,
+      email: email.toLowerCase(),
+      role: "USER",
+    };
+    const { accessToken, refreshToken } = generateTokens(user);
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    return res
+      .status(201)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(new ApiResponse(201, "User registered successfully.", { user }));
+  } catch (error) {
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "Something went wrong at signup controller.",
+          [],
+          error.stack
+        )
+      );
+  }
+};
+
 const signinController = async (req, res) => {
   // get the user details from request body
   // check if user exists
@@ -119,4 +187,4 @@ const signinController = async (req, res) => {
   }
 };
 
-export { signupController, signinController };
+export { signupController, signinController, userSignupController };
