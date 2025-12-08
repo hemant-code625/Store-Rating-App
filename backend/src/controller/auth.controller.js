@@ -187,4 +187,96 @@ const signinController = async (req, res) => {
   }
 };
 
-export { signupController, signinController, userSignupController };
+const updatePassword = async (req, res) => {
+  // get email, old password and new password from req.body
+  // validate email with current user, verify old password
+  // validate new password
+  // hash new password
+  // update password in database
+  // generate new tokens
+  // send response with cookies
+  const { email, oldPassword, newPassword } = req.body;
+  const userId = req.user.id;
+  const errors = [];
+  try {
+    const user = await dbQuery("SELECT * FROM user WHERE id = ?", [
+      userId,
+    ]).then((results) => results[0]);
+    if (!user) {
+      return res.status(404).json(new ApiError(404, "User not found."));
+    }
+    if (user.email !== email) {
+      return res.status(400).json(new ApiError(400, "Incorrect Email."));
+    }
+    const isValidOldPassword = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isValidOldPassword) {
+      return res
+        .status(401)
+        .json(new ApiError(401, "Old password is incorrect."));
+    }
+
+    if (!newPassword || newPassword.length < 8 || newPassword.length > 16) {
+      errors.push("Password must be between 8 and 16 characters long.");
+    }
+    if (newPassword && !/[A-Z]/.test(newPassword)) {
+      errors.push("Password must include at least one uppercase letter.");
+    }
+    if (
+      newPassword &&
+      !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword)
+    ) {
+      errors.push("Password must include at least one special character.");
+    }
+    if (errors.length > 0) {
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            "Validation failed. Password must be between 8 and 16 characters long, include at least one uppercase letter, and include at least one special character.",
+            errors
+          )
+        );
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await dbQuery("UPDATE user SET password = ? WHERE id = ?", [
+      hashedNewPassword,
+      userId,
+    ]);
+
+    const updatedUser = { ...user, password: undefined };
+    console.log("Updated User password:", updatedUser);
+    const { accessToken, refreshToken } = generateTokens(updatedUser);
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    return res
+      .status(200)
+      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, options)
+      .json(
+        new ApiResponse(200, "Password changed successfully.", {
+          user: updatedUser,
+        })
+      );
+  } catch (error) {
+    console.error("Error in updatePassword controller:", error);
+    return res
+      .status(500)
+      .json(
+        new ApiError(500, "Something went wrong at updatePassword controller.")
+      );
+  }
+};
+
+export {
+  signupController,
+  signinController,
+  userSignupController,
+  updatePassword,
+};
