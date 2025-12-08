@@ -6,7 +6,6 @@ const App = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const role = user?.role;
-  console.log("User Role:", role, user);
 
   useEffect(() => {
     if (!user) {

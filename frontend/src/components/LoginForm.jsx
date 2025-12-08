@@ -51,12 +51,12 @@ const LoginForm = () => {
       }
 
       const userData = {
-        id: result.user.id,
-        name: result.user.name,
-        email: result.user.email,
-        address: result.user.address,
-        role: result.user.role,
-        createdAt: result.user.createdAt,
+        id: result.data.user.id,
+        name: result.data.user.name,
+        email: result.data.user.email,
+        address: result.data.user.address,
+        role: result.data.user.role,
+        createdAt: result.data.user.createdAt,
       };
 
       login(userData);

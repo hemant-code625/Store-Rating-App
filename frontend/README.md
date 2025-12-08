@@ -2,8 +2,8 @@
 
 ## High Priority task:
 
-- Add client side validation to add user form
-- Don't send cookies on signup as adding user will change already looged in admin cookies.
+- Add client side validation to add user form ✅
+- Don't send cookies on signup as adding user will change already looged in admin cookies. ✅
 
 ## Medium priority task:
 

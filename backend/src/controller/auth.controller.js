@@ -13,7 +13,7 @@ const signupController = async (req, res) => {
   // create new user in the database
   // generate tokens
   // send response
-  const { name, address, email, password } = req.body;
+  const { name, address, email, password, role } = req.body;
 
   const validDetails = validateSignupDetails(name, address, email, password);
 
@@ -38,8 +38,8 @@ const signupController = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await dbQuery(
-      "INSERT INTO user (name, address, email, password) VALUES (?, ?, ?, ?)",
-      [name, address, email.toLowerCase(), hashedPassword]
+      "INSERT INTO user (name, address, email, password, role) VALUES (?, ?, ?, ?, ?)",
+      [name, address, email.toLowerCase(), hashedPassword, role]
     );
 
     return res
