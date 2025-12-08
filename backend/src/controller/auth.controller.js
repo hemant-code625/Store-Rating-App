@@ -247,7 +247,7 @@ const updatePassword = async (req, res) => {
     ]);
 
     const updatedUser = { ...user, password: undefined };
-    console.log("Updated User password:", updatedUser);
+
     const { accessToken, refreshToken } = generateTokens(updatedUser);
 
     const options = {
