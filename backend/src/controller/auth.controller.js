@@ -10,7 +10,7 @@ const signupController = async (req, res) => {
   // hash password
   // create new user in the database
   // generate tokens
-  // send response with cookies
+  // send response
   const { name, address, email, password } = req.body;
 
   const validDetails = validateSignupDetails(name, address, email, password);
@@ -47,18 +47,9 @@ const signupController = async (req, res) => {
       role: "USER", // default role
     });
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
-    return res
-      .status(201)
-      .cookie("refreshToken", refreshToken, options)
-      .cookie("accessToken", accessToken, options)
-      .json({
-        message: "User signed up successfully.",
-      });
+    return res.status(201).json({
+      message: "User signed up successfully.",
+    });
   } catch (error) {
     return res.status(500).json({
       message: "Internal server error.",
