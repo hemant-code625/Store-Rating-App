@@ -10,6 +10,7 @@ export const apiConfig = {
       signup: "/api/auth/signup",
       logout: "/api/auth/logout",
       refresh: "/api/auth/refresh",
+      updatePassword: "/api/auth/update-password",
     },
   },
 };
