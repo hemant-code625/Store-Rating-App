@@ -66,6 +66,11 @@ All tables support ascending/descending sorting on key fields like Name and Emai
 # Backend
 cd backend
 npm install
+
+# Generate Prisma Client and create database tables
+npx prisma generate
+npx prisma migrate dev
+
 npm run dev
 
 # Frontend (new terminal)
@@ -80,6 +85,11 @@ npm run dev
 # Backend
 cd backend
 pnpm install
+
+# Generate Prisma Client and create database tables
+npx prisma generate
+npx prisma migrate dev
+
 pnpm run dev
 
 # Frontend (new terminal)
