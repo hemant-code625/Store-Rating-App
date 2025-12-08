@@ -1,10 +1,8 @@
 import jwt from "jsonwebtoken";
+import { ApiError } from "../utils/ApiError.js";
+import { dbQuery } from "../db/index.js";
 
-const isAdmin = async (req, res, next) => {
-  // get token from cookies or authorization header
-  // jwt.verify()
-  // check if user role is admin
-  // proceed to next middleware/controller
+const verifyJWT = async (req, res, next) => {
   try {
     const token =
       req.cookies.accessToken ||
@@ -24,19 +22,20 @@ const isAdmin = async (req, res, next) => {
       return res.status(401).json(new ApiError(401, "Invalid access token."));
     }
 
-    if (decodedToken.role !== "ADMIN") {
-      return res.status(403).json({
-        message: "Access denied. Admins only.",
-      });
+    const user = await dbQuery(
+      "SELECT id, name, email, role FROM user WHERE id = ?",
+      [decodedToken.id]
+    );
+
+    if (user.length === 0) {
+      return res.status(401).json(new ApiError(401, "User not found."));
     }
+
+    req.user = user[0];
     next();
   } catch (error) {
-    return res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-      location: "isAdminMiddleware",
-    });
+    return res.status(500).json(new ApiError(500, "Server error."));
   }
 };
 
-export { isAdmin };
+export { verifyJWT };

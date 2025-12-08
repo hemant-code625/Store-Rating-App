@@ -21,4 +21,21 @@ const getAllUsersController = async (req, res) => {
   }
 };
 
-export { getAllUsersController };
+const getAllStoreListController = async (req, res) => {
+  try {
+    const storeArray = await dbQuery(
+      "SELECT id, name, address, role FROM user WHERE role = 'OWNER'",
+      []
+    );
+    return res
+      .status(200)
+      .json(new ApiResponse(200, "Stores fetched successfully.", storeArray));
+  } catch (error) {
+    console.error("Error fetching stores: ", error);
+    return res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error", null));
+  }
+};
+
+export { getAllUsersController, getAllStoreListController };

@@ -5,6 +5,7 @@ import DashboardCard from "../components/DashboardCard";
 import UserList from "../components/UserList";
 import StoreList from "../components/StoreList";
 import AddUserForm from "../components/AddUserForm";
+import { useAuth } from "../context/AuthContext";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -64,7 +65,7 @@ const AdminDashboard = () => {
       <Sidebar setActiveTab={setActiveTab} />
 
       <div className="flex-1">
-        <Navbar />
+        <Navbar user={useAuth().user} />
 
         <main className="p-4">
           {loading && <p className="text-blue-400">Loading...</p>}
