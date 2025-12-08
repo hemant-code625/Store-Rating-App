@@ -105,7 +105,7 @@ const AddUserForm = ({ onAdd }) => {
         placeholder="Name"
         value={form.name}
         onChange={handleChange}
-        className="mb-1 w-full px-3 py-2 rounded bg-gray-800 text-white"
+        className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
         required
       />
       {errors.name && (
@@ -119,7 +119,7 @@ const AddUserForm = ({ onAdd }) => {
         placeholder="Email"
         value={form.email}
         onChange={handleChange}
-        className="mb-1 w-full px-3 py-2 rounded bg-gray-800 text-white"
+        className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
         required
       />
       {errors.email && (
@@ -134,7 +134,7 @@ const AddUserForm = ({ onAdd }) => {
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          className="mb-1 w-full px-3 py-2 rounded bg-gray-800 text-white"
+          className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
           required
           onCopy={(e) => e.preventDefault()}
           onPaste={(e) => e.preventDefault()}
@@ -159,7 +159,7 @@ const AddUserForm = ({ onAdd }) => {
           placeholder="Confirm Password"
           value={form.confirmPassword}
           onChange={handleChange}
-          className="mb-1 w-full px-3 py-2 rounded bg-gray-800 text-white"
+          className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
           required
           onCopy={(e) => e.preventDefault()}
           onPaste={(e) => e.preventDefault()}
@@ -183,7 +183,7 @@ const AddUserForm = ({ onAdd }) => {
         placeholder="Address"
         value={form.address}
         onChange={handleChange}
-        className="mb-1 w-full px-3 py-2 rounded bg-gray-800 text-white"
+        className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
         required
       />
       {errors.address && (

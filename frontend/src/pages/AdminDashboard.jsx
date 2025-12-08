@@ -37,7 +37,9 @@ const AdminDashboard = () => {
           )}
           {activeTab === "Users" && <UserList users={users} />}
           {activeTab === "Stores" && <StoreList stores={stores} />}
-          {activeTab === "Add User" && <AddUserForm onAdd={handleAddUser} />}
+          {activeTab === "Add: Store Owner, Admin or User" && (
+            <AddUserForm onAdd={handleAddUser} />
+          )}
         </main>
       </div>
     </div>

@@ -1,5 +1,10 @@
 const Sidebar = ({ setActiveTab }) => {
-  const tabs = ["Dashboard", "Users", "Stores", "Add User"];
+  const tabs = [
+    "Dashboard",
+    "Users",
+    "Stores",
+    "Add: Store Owner, Admin or User",
+  ];
 
   return (
     <aside className="bg-gray-900 text-white w-64 min-h-screen p-4 hidden md:block">
