@@ -14,7 +14,7 @@ const StoreList = ({ stores }) => {
     <div className="p-4 overflow-x-auto">
       <input
         type="text"
-        placeholder="Filter by Name, Email, Address"
+        placeholder="Search by Name, Email, Address"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
         className="mb-4 px-3 py-2 rounded w-full bg-gray-800 text-white placeholder-gray-400"

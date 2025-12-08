@@ -7,7 +7,7 @@ const UserList = ({ users }) => {
     (u) =>
       u.name.toLowerCase().includes(filter.toLowerCase()) ||
       u.email.toLowerCase().includes(filter.toLowerCase()) ||
-      u.address.toLowerCase().includes(filter.toLowerCase()) ||
+      u.address?.toLowerCase().includes(filter.toLowerCase()) ||
       u.role.toLowerCase().includes(filter.toLowerCase())
   );
 
@@ -15,7 +15,7 @@ const UserList = ({ users }) => {
     <div className="p-4 overflow-x-auto">
       <input
         type="text"
-        placeholder="Filter by Name, Email, Address, Role"
+        placeholder="Search by Name, Email, Address, Role"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
         className="mb-4 px-3 py-2 rounded w-full bg-gray-800 text-white placeholder-gray-400"
