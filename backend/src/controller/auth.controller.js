@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import { dbQuery } from "../db/index.js";
 import { generateTokens } from "../utils/generateTokens.js";
 import { validateSignupDetails } from "../utils/validateSingupDetails.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 
 const signupController = async (req, res) => {
   // get user details from request body
@@ -28,9 +30,9 @@ const signupController = async (req, res) => {
     ]).then((results) => results[0]);
 
     if (existingUser) {
-      return res.status(409).json({
-        message: "User with this email already exists.",
-      });
+      return res
+        .status(409)
+        .json(new ApiError(409, "User with this email already exists."));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -40,22 +42,20 @@ const signupController = async (req, res) => {
       [name, address, email.toLowerCase(), hashedPassword]
     );
 
-    const { accessToken, refreshToken } = generateTokens({
-      id: newUser.insertId,
-      name,
-      email: email.toLowerCase(),
-      role: "USER", // default role
-    });
-
-    return res.status(201).json({
-      message: "User signed up successfully.",
-    });
+    return res
+      .status(201)
+      .json(new ApiResponse(201, "User registered successfully."));
   } catch (error) {
-    return res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-      location: "signupController",
-    });
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "Something went wrong at signup controller.",
+          [],
+          error.stack
+        )
+      );
   }
 };
 
@@ -74,7 +74,7 @@ const signinController = async (req, res) => {
     errors.push("Email must be a valid email address.");
   }
   if (!password) {
-    return res.status(400).json({ message: "Password is required." });
+    return res.status(400).json(new ApiError(400, "Password is required."));
   }
 
   try {
@@ -86,11 +86,11 @@ const signinController = async (req, res) => {
     ]).then((results) => results[0]);
 
     if (!existingUser) {
-      return res.status(404).json({ message: "Invalid credentials" });
+      return res.status(404).json(new ApiError(404, "Invalid credentials"));
     }
     const isValid = await bcrypt.compare(password, existingUser.password);
     if (!isValid) {
-      return res.status(401).json({ message: "Invalid credentials." });
+      return res.status(401).json(new ApiError(401, "Invalid credentials"));
     }
     delete existingUser.password;
     const { accessToken, refreshToken } = generateTokens(existingUser);
@@ -104,16 +104,18 @@ const signinController = async (req, res) => {
       .status(200)
       .cookie("refreshToken", refreshToken, options)
       .cookie("accessToken", accessToken, options)
-      .json({
-        user: existingUser,
-        message: "User signed in successfully.",
-      });
+      .json(new ApiResponse(200, "Signin successful.", { user: existingUser }));
   } catch (error) {
-    return res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-      location: "signinController",
-    });
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "Something went wrong at signin controller.",
+          [],
+          error.stack
+        )
+      );
   }
 };
 
