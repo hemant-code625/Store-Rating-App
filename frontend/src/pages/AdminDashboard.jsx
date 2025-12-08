@@ -40,24 +40,8 @@ const AdminDashboard = () => {
     }
   };
 
-  // const fetchRatingsCount = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       "http://localhost:8080/api/ratings/getTotalRatings",
-  //       { method: "GET", credentials: "include" }
-  //     );
-
-  //     const data = await response.json();
-  //     if (response.ok) {
-  //       setRatingsCount(data.totalRatings || 0);
-  //     }
-  //   } catch (e) {}
-  // };
-
-  // Load all admin data on mount
   useEffect(() => {
     fetchUsers();
-    // fetchRatingsCount();
   }, []);
 
   const stores = users
@@ -67,7 +51,7 @@ const AdminDashboard = () => {
       name: owner.name,
       email: owner.email,
       address: owner.address,
-      // rating will be fetched later per store
+      // rating will be calculated as average of ratings from all users
     }));
 
   // Add user locally
