@@ -1,6 +1,6 @@
 // API configuration
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";    // Backend .env.example has PORT=8080
 
 export const apiConfig = {
   baseURL: API_BASE_URL,
