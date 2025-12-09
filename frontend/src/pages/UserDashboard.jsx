@@ -7,7 +7,12 @@ const UserDashboard = ({ user }) => {
   const [stores, setStores] = useState([]);
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
+  const [rateLoading, setRatingsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    key: "name",
+    direction: "asc",
+  });
   const { getAverageRating, initializeAllRatings } = useRating();
 
   const fetchStores = async () => {
@@ -22,11 +27,14 @@ const UserDashboard = ({ user }) => {
       const data = await response.json();
       if (response.ok) {
         setStores(data.data || []);
+        // Initialize ratings after stores are loaded
         await initializeAllRatings();
+        setRatingsLoading(false);
       }
     } catch (err) {
       console.error(err);
       setError("Failed to load stores");
+      setRatingsLoading(false);
     }
   };
 
@@ -46,6 +54,49 @@ const UserDashboard = ({ user }) => {
       store.name.toLowerCase().includes(filter.toLowerCase()) ||
       store.address?.toLowerCase().includes(filter.toLowerCase())
   );
+
+  const sortedStores = [...filteredStores].sort((a, b) => {
+    const { key, direction } = sortConfig;
+
+    const dir = direction === "asc" ? 1 : -1;
+
+    const normalizeValue = (store, sortKey) => {
+      if (sortKey === "averageRating") {
+        // Try to get from context first, then from store object
+        const contextRating = getAverageRating(store.id);
+        const rating =
+          contextRating !== 0 ? contextRating : store.averageRating;
+        if (typeof rating === "number") return rating;
+        const parsed = Number(rating);
+        return Number.isNaN(parsed) ? -1 : parsed;
+      }
+      return String(store[sortKey] || "").toLowerCase();
+    };
+
+    const aValue = normalizeValue(a, key);
+    const bValue = normalizeValue(b, key);
+
+    if (aValue < bValue) return -1 * dir;
+    if (aValue > bValue) return 1 * dir;
+    return 0;
+  });
+
+  const toggleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        return {
+          key,
+          direction: prev.direction === "asc" ? "desc" : "asc",
+        };
+      }
+      return { key, direction: "asc" };
+    });
+  };
+
+  const renderSortIcon = (key) => {
+    if (sortConfig.key !== key) return "";
+    return sortConfig.direction === "asc" ? "▲" : "▼";
+  };
 
   if (loading)
     return (
@@ -80,24 +131,39 @@ const UserDashboard = ({ user }) => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-gray-700">
-                  <th className="py-2 px-3">Store Name</th>
-                  <th className="py-2 px-3">Address</th>
-                  <th className="py-2 px-3">Average Rating</th>
+                  <th
+                    className="py-2 px-3 cursor-pointer select-none"
+                    onClick={() => toggleSort("name")}
+                  >
+                    Store Name {renderSortIcon("name")}
+                  </th>
+                  <th
+                    className="py-2 px-3 cursor-pointer select-none"
+                    onClick={() => toggleSort("address")}
+                  >
+                    Address {renderSortIcon("address")}
+                  </th>
+                  <th
+                    className="py-2 px-3 cursor-pointer select-none"
+                    onClick={() => toggleSort("averageRating")}
+                  >
+                    Average Rating {renderSortIcon("averageRating")}
+                  </th>
                   <th className="py-2 px-3">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredStores.length === 0 ? (
+                {sortedStores.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={3}
+                      colSpan={4}
                       className="text-gray-400 py-4 px-3 text-center"
                     >
                       No stores found.
                     </td>
                   </tr>
                 ) : (
-                  filteredStores.map((store) => (
+                  sortedStores.map((store) => (
                     <tr
                       key={store.id}
                       className="border-b border-gray-700 hover:bg-gray-800 transition"
@@ -105,9 +171,9 @@ const UserDashboard = ({ user }) => {
                       <td className="py-2 px-3">{store.name}</td>
                       <td className="py-2 px-3">{store.address}</td>
                       <td className="py-2 px-3">
-                        {getAverageRating(store.id) ||
-                          store.averageRating ||
-                          "N/A"}
+                        {rateLoading
+                          ? "Loading..."
+                          : getAverageRating(store.id)}
                       </td>
                       <td className="py-2 px-3 ">
                         <HandleRating storeId={store.id} />
