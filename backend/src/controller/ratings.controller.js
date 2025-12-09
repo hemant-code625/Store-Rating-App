@@ -188,7 +188,7 @@ const getStoreRatingsController = async (req, res) => {
 
     // Get all ratings for the store with user details
     const ratings = await dbQuery(
-      "SELECT r.id, r.rating, r.createdAt, r.updatedAt, u.id as userId, u.name as userName FROM rating r INNER JOIN user u ON r.userId = u.id WHERE r.storeId = ? ORDER BY r.updatedAt DESC",
+      "SELECT r.id, r.rating, r.createdAt, r.updatedAt, u.id as userId, u.name as userName, u.email as userEmail FROM rating r INNER JOIN user u ON r.userId = u.id WHERE r.storeId = ? ORDER BY r.updatedAt DESC",
       [storeId]
     );
 
