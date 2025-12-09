@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import HandleRating from "./ui/HandleRating";
+import { useRating } from "../context/RatingContext";
 
 const UserDashboard = ({ user }) => {
   const [stores, setStores] = useState([]);
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { getAverageRating, initializeAllRatings } = useRating();
 
   const fetchStores = async () => {
     try {
@@ -18,7 +20,10 @@ const UserDashboard = ({ user }) => {
         }
       );
       const data = await response.json();
-      if (response.ok) setStores(data.data || []);
+      if (response.ok) {
+        setStores(data.data || []);
+        await initializeAllRatings();
+      }
     } catch (err) {
       console.error(err);
       setError("Failed to load stores");
@@ -34,7 +39,7 @@ const UserDashboard = ({ user }) => {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [initializeAllRatings]);
 
   const filteredStores = stores.filter(
     (store) =>
@@ -61,7 +66,7 @@ const UserDashboard = ({ user }) => {
       <div className="flex-1">
         <Navbar user={user} />
         <main className="p-6">
-          <h2 className="text-2xl font-bold mb-4">Stores to Rate</h2>
+          <h2 className="text-2xl font-bold mb-4">Rate your favorite stores</h2>
 
           <input
             type="text"
@@ -100,7 +105,9 @@ const UserDashboard = ({ user }) => {
                       <td className="py-2 px-3">{store.name}</td>
                       <td className="py-2 px-3">{store.address}</td>
                       <td className="py-2 px-3">
-                        {store.averageRating || "N/A"}
+                        {getAverageRating(store.id) ||
+                          store.averageRating ||
+                          "N/A"}
                       </td>
                       <td className="py-2 px-3 ">
                         <HandleRating storeId={store.id} />

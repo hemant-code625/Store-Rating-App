@@ -23,7 +23,9 @@ const signupController = async (req, res) => {
       errors: validDetails,
     });
   }
-
+  if (!role) {
+    return res.status(400).json(new ApiError(400, "Role is required."));
+  }
   try {
     const existingUser = await dbQuery("SELECT * FROM user WHERE email = ?", [
       email.toLowerCase(),
