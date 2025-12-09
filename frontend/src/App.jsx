@@ -3,7 +3,7 @@ import { useAuth } from "./context/AuthContext.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import { useNavigate } from "react-router-dom";
 import UserDashboard from "./pages/UserDashboard.jsx";
-// import OwnerDashboard from "./components/OwnerDashboard.jsx";
+import OwnerDashboard from "./pages/OwnerDashboard.jsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -26,9 +26,9 @@ const App = () => {
   if (role === "USER") {
     return <UserDashboard user={user} />;
   }
-  // if (role === "OWNER") {
-  //   return <OwnerDashboard user={user} />;
-  // }
+  if (role === "OWNER") {
+    return <OwnerDashboard user={user} />;
+  }
 
   return (
     <div className="bg-gray-900 text-white text-xl min-h-screen flex flex-col items-center justify-center">
