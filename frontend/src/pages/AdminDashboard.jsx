@@ -1,59 +1,88 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import DashboardCard from "../components/DashboardCard";
-import UserList from "../components/UserList";
-import StoreList from "../components/StoreList";
-import AddUserForm from "../components/AddUserForm";
+import Sidebar from "../components/admin/Sidebar";
+import DashboardCard from "../components/admin/DashboardCard";
+import UserList from "../components/admin/UserList";
+import StoreList from "../components/admin/StoreList";
+import AddUserForm from "../components/admin/AddUserForm";
 import { useAuth } from "../context/AuthContext";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [users, setUsers] = useState([]);
   const [ratingsCount, setRatingsCount] = useState(0);
+  const [storeAverages, setStoreAverages] = useState({});
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchUsers = async () => {
+  const fetchDashboardData = async () => {
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:8080/api/users/getUsers", {
-        method: "GET",
-        credentials: "include",
-      });
+      const [usersRes, averagesRes] = await Promise.all([
+        fetch("http://localhost:8080/api/users/getUsers", {
+          method: "GET",
+          credentials: "include",
+        }),
+        fetch("http://localhost:8080/api/ratings/averages/all", {
+          method: "GET",
+          credentials: "include",
+        }),
+      ]);
 
-      const res = await response.json();
+      const usersJson = await usersRes.json();
+      const averagesJson = await averagesRes.json();
 
-      if (!response.ok) {
-        setError(res.message || "Failed to fetch users");
-        return;
+      if (!usersRes.ok) {
+        throw new Error(usersJson.message || "Failed to fetch users");
       }
 
-      setUsers(res.data || []);
+      if (!averagesRes.ok) {
+        throw new Error(
+          averagesJson.message || "Failed to fetch store averages"
+        );
+      }
+
+      setUsers(usersJson.data || []);
+
+      const averagesMap = averagesJson?.data?.averages || {};
+      setStoreAverages(averagesMap);
+
+      const totalRatingsCount = Object.values(averagesMap).reduce(
+        (sum, store) => sum + (store.totalRatings || 0),
+        0
+      );
+      setRatingsCount(totalRatingsCount);
+
       setError("");
     } catch (e) {
       console.error(e);
-      setError("Network error occurred");
+      setError(e.message || "Network error occurred");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchDashboardData();
   }, []);
 
   const stores = users
     .filter((u) => u.role === "OWNER")
-    .map((owner) => ({
-      id: owner.id,
-      name: owner.name,
-      email: owner.email,
-      address: owner.address,
-      // rating will be calculated as average of ratings from all users
-    }));
+    .map((owner) => {
+      const storeStats = storeAverages[owner.id] || {};
+
+      return {
+        id: owner.id,
+        name: owner.name,
+        email: owner.email,
+        address: owner.address,
+        rating:
+          storeStats.totalRatings > 0 ? storeStats.averageRating : "No ratings",
+        totalRatings: storeStats.totalRatings || 0,
+      };
+    });
 
   // Add user locally
   const handleAddUser = (newUser) => {

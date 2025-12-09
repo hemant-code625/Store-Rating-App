@@ -5,7 +5,7 @@
 - Add client side validation to add user form ✅
 - Don't send cookies on signup as adding user will change already looged in admin cookies. ✅
 
-- Improvement: When user get's logged-in he can't see his store ratings and the average store ratings.
+- Improvement: When user get's logged-in he can't see his store ratings and the average store ratings. ✅
 
 ## Medium priority task:
 

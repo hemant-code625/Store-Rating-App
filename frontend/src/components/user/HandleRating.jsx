@@ -1,5 +1,5 @@
 import { useState } from "react";
-import StarRating from "./StarRating";
+import StarRating from "../ui/StarRating";
 import { useRating } from "../../context/RatingContext";
 
 export default function HandleRating({ storeId }) {

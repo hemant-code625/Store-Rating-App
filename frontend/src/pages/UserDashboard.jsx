@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import HandleRating from "./ui/HandleRating";
-import { useRating } from "../context/RatingContext";
+import Navbar from "../components/Navbar.jsx";
+import { useRating } from "../context/RatingContext.jsx";
+import HandleRating from "../components/user/HandleRating.jsx";
 
 const UserDashboard = ({ user }) => {
   const [stores, setStores] = useState([]);

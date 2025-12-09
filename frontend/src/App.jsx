@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAuth } from "./context/AuthContext.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import { useNavigate } from "react-router-dom";
-import UserDashboard from "./components/UserDashboard.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
 // import OwnerDashboard from "./components/OwnerDashboard.jsx";
 
 const App = () => {
