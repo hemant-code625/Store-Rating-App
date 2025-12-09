@@ -4,7 +4,7 @@ import "./index.css";
 import router from "./router.jsx";
 import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider.jsx";
-import { RatingProvider } from "./context/RatingContext.jsx";
+import { RatingProvider } from "./context/RatingProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

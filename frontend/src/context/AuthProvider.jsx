@@ -14,9 +14,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(() => {
+    const userId = user?.id;
     setUser(null);
     sessionStorage.removeItem("user");
-  }, []);
+
+    // Clear user-specific rating data
+    if (userId) {
+      sessionStorage.removeItem(`ratings_${userId}`);
+      sessionStorage.removeItem(`averageRatings_${userId}`);
+    }
+  }, [user?.id]);
 
   const value = {
     user,

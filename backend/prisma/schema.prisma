@@ -13,37 +13,23 @@ datasource db {
 }
 
 model User {
-  id        BigInt   @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  address   String?
-  role      Role     @default(USER)
-  stores    Store[]  @relation("OwnerStores")
-  ratings   Rating[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Store {
-  id           BigInt   @id @default(autoincrement())
-  ownerId      BigInt?
-  owner        User?    @relation("OwnerStores", fields: [ownerId], references: [id])
-  name         String
-  email        String?
-  address      String?
-  avgRating    Float?
-  ratingsCount Int      @default(0)
-  ratings      Rating[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              BigInt   @id @default(autoincrement())
+  name            String
+  email           String   @unique
+  password        String
+  address         String?
+  role            Role     @default(USER)
+  ratingsGiven    Rating[] @relation("UserRatings")
+  ratingsReceived Rating[] @relation("StoreRatings")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Rating {
   id        BigInt   @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation("UserRatings", fields: [userId], references: [id])
   userId    BigInt
-  store     Store    @relation(fields: [storeId], references: [id])
+  store     User     @relation("StoreRatings", fields: [storeId], references: [id])
   storeId   BigInt
   rating    Int
   createdAt DateTime @default(now())
