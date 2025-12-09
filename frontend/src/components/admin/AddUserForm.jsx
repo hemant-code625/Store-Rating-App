@@ -97,122 +97,135 @@ const AddUserForm = ({ onAdd }) => {
   }, [notify]);
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 max-w-md">
-      {/* Name */}
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={form.name}
-        onChange={handleChange}
-        className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
-        required
-      />
-      {errors.name && (
-        <p className="text-red-500 text-sm mb-2">{errors.name}</p>
-      )}
-
-      {/* Email */}
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-        className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
-        required
-      />
-      {errors.email && (
-        <p className="text-red-500 text-sm mb-2">{errors.email}</p>
-      )}
-
-      {/* Password */}
-      <div className="relative">
+    <>
+      <div className="p-4 bg-yellow-800 rounded-md font-mono w-fit ">
+        <p>
+          After creating a user, please inform them of their temporary password
+          and store it in a secure location.
+        </p>
+        <p>
+          {" "}
+          This temporary password cannot be retrieved later for security
+          reasons.
+        </p>
+      </div>
+      <form onSubmit={handleSubmit} className="p-4 max-w-md">
+        {/* Name */}
         <input
-          type={showPassword ? "text" : "password"}
-          name="password"
-          placeholder="Password"
-          value={form.password}
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={form.name}
           onChange={handleChange}
           className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
           required
-          onCopy={(e) => e.preventDefault()}
-          onPaste={(e) => e.preventDefault()}
         />
-        <button
-          type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
-        >
-          {showPassword ? "🙈" : "👁️"}
-        </button>
-      </div>
-      {errors.password && (
-        <p className="text-red-500 text-sm mb-2">{errors.password}</p>
-      )}
+        {errors.name && (
+          <p className="text-red-500 text-sm mb-2">{errors.name}</p>
+        )}
 
-      {/* Confirm Password */}
-      <div className="relative">
+        {/* Email */}
         <input
-          type={showConfirmPassword ? "text" : "password"}
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          value={form.confirmPassword}
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
           onChange={handleChange}
           className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
           required
-          onCopy={(e) => e.preventDefault()}
-          onPaste={(e) => e.preventDefault()}
         />
-        <button
-          type="button"
-          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
+        {errors.email && (
+          <p className="text-red-500 text-sm mb-2">{errors.email}</p>
+        )}
+
+        {/* Password */}
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
+            required
+            onCopy={(e) => e.preventDefault()}
+            onPaste={(e) => e.preventDefault()}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </button>
+        </div>
+        {errors.password && (
+          <p className="text-red-500 text-sm mb-2">{errors.password}</p>
+        )}
+
+        {/* Confirm Password */}
+        <div className="relative">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
+            required
+            onCopy={(e) => e.preventDefault()}
+            onPaste={(e) => e.preventDefault()}
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
+          >
+            {showConfirmPassword ? "🙈" : "👁️"}
+          </button>
+        </div>
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-sm mb-2">{errors.confirmPassword}</p>
+        )}
+
+        {/* Address */}
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          value={form.address}
+          onChange={handleChange}
+          className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
+          required
+        />
+        {errors.address && (
+          <p className="text-red-500 text-sm mb-2">{errors.address}</p>
+        )}
+
+        {/* Role */}
+        <select
+          name="role"
+          value={form.role}
+          onChange={handleChange}
+          className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
         >
-          {showConfirmPassword ? "🙈" : "👁️"}
+          <option value="user">Normal User</option>
+          <option value="owner">Store Owner</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded w-full"
+        >
+          Add User
         </button>
-      </div>
-      {errors.confirmPassword && (
-        <p className="text-red-500 text-sm mb-2">{errors.confirmPassword}</p>
-      )}
 
-      {/* Address */}
-      <input
-        type="text"
-        name="address"
-        placeholder="Address"
-        value={form.address}
-        onChange={handleChange}
-        className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
-        required
-      />
-      {errors.address && (
-        <p className="text-red-500 text-sm mb-2">{errors.address}</p>
-      )}
-
-      {/* Role */}
-      <select
-        name="role"
-        value={form.role}
-        onChange={handleChange}
-        className="mb-2 w-full px-3 py-2 rounded bg-gray-800 text-white"
-      >
-        <option value="user">User</option>
-        <option value="owner">Owner</option>
-        <option value="admin">Admin</option>
-      </select>
-
-      {/* Submit */}
-      <button
-        type="submit"
-        className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded w-full"
-      >
-        Add User
-      </button>
-
-      {/* Notification */}
-      {notify && <p className="mt-2 text-blue-400">{notify}</p>}
-    </form>
+        {/* Notification */}
+        {notify && <p className="mt-2 text-blue-400">{notify}</p>}
+      </form>
+    </>
   );
 };
 
