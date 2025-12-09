@@ -1,7 +1,6 @@
 import express from "express";
 import {
   submitRatingController,
-  getUserRatingController,
   getAllUserRatingsController,
   getAllStoreAveragesController,
   getStoreRatingsController,
