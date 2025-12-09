@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const StarRating = ({ currentRating = 0, onRatingChange }) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [rating, setRating] = useState(currentRating);
+
+  // Sync internal state when the parent updates currentRating (e.g., after async fetch)
+  useEffect(() => {
+    setRating(currentRating);
+  }, [currentRating]);
 
   const handleMouseEnter = (value) => setHoverRating(value);
   const handleMouseLeave = () => setHoverRating(0);
